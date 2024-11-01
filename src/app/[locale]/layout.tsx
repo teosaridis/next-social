@@ -5,12 +5,13 @@ import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import Navbar from "@/components/navbar/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Lama Dev Social Media App",
-  description: "Social media app built with Next.js",
+  title: "Teos Social Media App",
+  description: "Social media app built with Next.js and a lot Love ♥",
 };
 
 export default async function RootLayout({
@@ -22,7 +23,7 @@ export default async function RootLayout({
 }>) {
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale as any)) {
-    // notFound();
+    notFound();
   }
 
   // Providing all messages to the client
@@ -30,10 +31,15 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang="en">
+    <html>
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <div className="w-full bg-white px-4 px-8">
+            <Navbar />
+          </div>
+          <div className="bg-slate-100 px-4 md:px-8 lg:px-16 xl:px-32 2xl:p-64">
+            {children}
+          </div>
         </NextIntlClientProvider>
       </body>
     </html>
