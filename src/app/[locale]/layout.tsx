@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import Navbar from "@/components/navbar/Navbar";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,19 +30,18 @@ export default async function RootLayout({
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages();
-
   return (
-    <html>
-      <body className={inter.className}>
-        <NextIntlClientProvider messages={messages}>
-          <div className="w-full bg-white px-4 px-8">
-            <Navbar />
-          </div>
-          <div className="bg-slate-100 px-4 md:px-8 lg:px-16 xl:px-32 2xl:p-64">
-            {children}
-          </div>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html>
+        <body className={inter.className}>
+          <NextIntlClientProvider messages={messages}>
+            <div className="w-full bg-white px-4">
+              <Navbar />
+            </div>
+            <div className="bg-slate-100 px-4 min-h-screen">{children}</div>
+          </NextIntlClientProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
