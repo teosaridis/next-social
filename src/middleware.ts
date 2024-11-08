@@ -1,49 +1,35 @@
-import { NextRequest, NextResponse } from "next/server";
-import createMiddleware from "next-intl/middleware";
-import { routing } from "./i18n/routing";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import createMiddleware from "next-intl/middleware";
 
-const composeMiddlewares = (middlewares: {
-  [key: string]: (req: NextRequest) => NextResponse | Promise<NextResponse>;
-}) => {
-  return (req: NextRequest) => {
-    const parsedMiddlewares = Object.entries(middlewares);
-    const initialResponse = Promise.resolve(NextResponse.next());
+import { routing } from "./i18n/routing";
+import { getLocale } from "next-intl/server";
 
-    return parsedMiddlewares.reduce(
-      (prevPromise, [middlewareName, middleware]) => {
-        return prevPromise.then((res) => {
-          if (res?.status >= 300 && res?.status < 400) {
-            console.debug(`[middleware][skip][redirect] - ${middlewareName}`);
-            return res;
-          } else {
-            console.debug(`[middleware] - ${middlewareName}`);
-            return middleware(req);
-          }
-        });
-      },
-      initialResponse
-    );
-  };
-};
+const intlMiddleware = createMiddleware({
+  locales: routing.locales,
+  localePrefix: routing.localePrefix,
+  defaultLocale: routing.defaultLocale,
+});
+
+const isProtectedRoute = createRouteMatcher(["settings/(.*)", "/","/en"]);
+
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) await auth.protect();
+  if (req.nextUrl.pathname.startsWith("/api")) {
+    req.nextUrl.pathname = `${routing.defaultLocale}${req.nextUrl.pathname}`;
+  }
+  // console.log(req);
+
+  return intlMiddleware(req);
+});
 
 export const config = {
-  // Match only internationalized pathnames
   matcher: [
-    // Match all pathnames except for
-    // - … if they start with `/prisma`, `/_next` or `/_vercel`
-    // - … the ones containing a dot (e.g. `favicon.ico`)
-    "/((?!prisma|_next|_vercel|.*\\..*).*)",
+    // Skip Next.js internals and all static files, unless found in search params
+    // "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    // "/(apis|trpc)(.*)",
+    "/((?!.*\\..*|_next).*)",
     "/",
-    "/(en|gr)/:path*",
+    "/(api|trpc)(.*)",
   ],
 };
-
-const isProtectedRoute = createRouteMatcher(["/settings(.*)"]);
-
-export default composeMiddlewares({
-  nextintl: createMiddleware(routing),
-  clerk: clerkMiddleware((auth, req) => {
-    if (isProtectedRoute(req)) auth().protect();
-  }),
-});

@@ -22,7 +22,8 @@ const Ads = ({ size }: { size: "sm" | "md" | "lg" }) => {
           <Image
             src="https://images.pexels.com/photos/29122859/pexels-photo-29122859/free-photo-of-bright-orange-pumpkins-on-a-wooden-surface.jpeg?auto=compress&cs=tinysrgb&w=400&lazy=load"
             alt=""
-            fill
+            width={24}
+            height={24}
             className="rounded-lg object-cover"
           />
         </div>
