@@ -1,8 +1,8 @@
-import AddPost from "@/components/homepage/AddPost";
-import LeftMenu from "@/components/homepage/LeftMenu";
-import PostFeed from "@/components/homepage/PostFeed";
-import RightMenu from "@/components/homepage/RightMenu";
-import Stories from "@/components/homepage/Stories";
+import AddPost from "@/components/socialapp/AddPost";
+import LeftMenu from "@/components/socialapp/leftMenu/LeftMenu";
+import PostFeed from "@/components/socialapp/PostFeed";
+import RightMenu from "@/components/socialapp/rightMenu/RightMenu";
+import Stories from "@/components/socialapp/Stories";
 import { useTranslations } from "next-intl";
 
 const Homepage = () => {
@@ -24,7 +24,7 @@ const Homepage = () => {
       </div>
       {/* RIGHT  */}
       <div className="hidden lg:block w-[30%]">
-        <RightMenu />
+        <RightMenu userId="" />
       </div>
     </div>
   );

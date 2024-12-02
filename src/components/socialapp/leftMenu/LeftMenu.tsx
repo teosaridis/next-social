@@ -1,5 +1,5 @@
 import React from "react";
-import ProfileCard from "../user/ProfileCard";
+import ProfileCard from "./ProfileCard";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -8,7 +8,7 @@ type Props = { type: "home" | "profile" };
 const LeftMenu = (props: Props) => {
   return (
     <div className="flex flex-col gap-6">
-      <ProfileCard />
+      {/* <ProfileCard /> */}
       {props.type === "home" && <ProfileCard />}
       <div className="p-4 rounded-lg shadow-md bg-white text-sm text-gray-500 flex flex-col gap-2">
         <Link
