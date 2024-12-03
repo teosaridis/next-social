@@ -17,7 +17,6 @@
     "next": "^15.0.0-canary.31",
     "next-i18next": "^15.3.1",
     "next-intl": "^3.24.0",
-    "prisma": "^5.22.0",
     "react": "19.0.0-rc-f994737d14-20240522",
     "react-dom": "19.0.0-rc-f994737d14-20240522",
     "react-i18next": "^15.1.1",
@@ -30,6 +29,7 @@
     "eslint": "^8",
     "eslint-config-next": "15.0.0-rc.0",
     "postcss": "^8",
+    "prisma": "^6.0.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

@@ -7,7 +7,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 const ProfilePage = async ({ params }: { params: { username: string } }) => {
-  const username = params.username;
+  const { username } = await params;
 
   const user = await prisma.user.findFirst({
     where: {

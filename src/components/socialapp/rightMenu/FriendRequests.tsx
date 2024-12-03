@@ -1,10 +1,27 @@
+import prisma from "@/lib/client";
+import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import FriendRequestList from "./FriendRequestList";
 
 type Props = {};
 
-const FriendRequests = (props: Props) => {
+const FriendRequests = async (props: Props) => {
+  const { userId } = await auth();
+
+  if (!userId) return null;
+
+  const requests = await prisma.followRequest.findMany({
+    where: {
+      receiverId: userId,
+    },
+    include: {
+      sender: true,
+    },
+  });
+  // if (requests.length === 0) return null;
+
   return (
     <div className="p-4 rounded-lg shadow-md text-sm bg-white flex flex-col gap-4">
       {/* TOP  */}
@@ -15,132 +32,9 @@ const FriendRequests = (props: Props) => {
         </Link>
       </div>
       {/* USER  */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Image
-            src={
-              "https://images.pexels.com/photos/12980707/pexels-photo-12980707.jpeg?auto=compress&cs=tinysrgb&w=400&lazy=load"
-            }
-            alt=""
-            className="w-10 h-10 rounded-full object-cover"
-            width={40}
-            height={40}
-          />
-          <span className="font-semibold">Plousia Sar</span>
-        </div>
-        <div className="flex gap-3 justify-end">
-          <Image
-            src={"/accept.png"}
-            alt=""
-            className="cursor-pointer"
-            width={20}
-            height={20}
-          />
-          <Image
-            src={"/reject.png"}
-            alt=""
-            className="cursor-pointer"
-            width={20}
-            height={20}
-          />
-        </div>
-      </div>
 
-      {/* USER  */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Image
-            src={
-              "https://images.pexels.com/photos/12980707/pexels-photo-12980707.jpeg?auto=compress&cs=tinysrgb&w=400&lazy=load"
-            }
-            alt=""
-            className="w-10 h-10 rounded-full object-cover"
-            width={40}
-            height={40}
-          />
-          <span className="font-semibold">Plousia Sar</span>
-        </div>
-        <div className="flex gap-3 justify-end">
-          <Image
-            src={"/accept.png"}
-            alt=""
-            className="cursor-pointer"
-            width={20}
-            height={20}
-          />
-          <Image
-            src={"/reject.png"}
-            alt=""
-            className="cursor-pointer"
-            width={20}
-            height={20}
-          />
-        </div>
-      </div>
+      <FriendRequestList requests={requests} />
 
-      {/* USER  */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Image
-            src={
-              "https://images.pexels.com/photos/12980707/pexels-photo-12980707.jpeg?auto=compress&cs=tinysrgb&w=400&lazy=load"
-            }
-            alt=""
-            className="w-10 h-10 rounded-full object-cover"
-            width={40}
-            height={40}
-          />
-          <span className="font-semibold">Plousia Sar</span>
-        </div>
-        <div className="flex gap-3 justify-end">
-          <Image
-            src={"/accept.png"}
-            alt=""
-            className="cursor-pointer"
-            width={20}
-            height={20}
-          />
-          <Image
-            src={"/reject.png"}
-            alt=""
-            className="cursor-pointer"
-            width={20}
-            height={20}
-          />
-        </div>
-      </div>
-
-      {/* USER  */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Image
-            src={
-              "https://images.pexels.com/photos/12980707/pexels-photo-12980707.jpeg?auto=compress&cs=tinysrgb&w=400&lazy=load"
-            }
-            alt=""
-            className="w-10 h-10 rounded-full object-cover"
-            width={40}
-            height={40}
-          />
-          <span className="font-semibold">Plousia Sar</span>
-        </div>
-        <div className="flex gap-3 justify-end">
-          <Image
-            src={"/accept.png"}
-            alt=""
-            className="cursor-pointer"
-            width={20}
-            height={20}
-          />
-          <Image
-            src={"/reject.png"}
-            alt=""
-            className="cursor-pointer"
-            width={20}
-            height={20}
-          />
-        </div>
-      </div>
     </div>
   );
 };

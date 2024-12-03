@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import UserInfoCardInteraction from "./userInfoCardInteraction";
+import UpdateUser from "./UpdateUser";
 
 type Props = { user: User };
 
@@ -21,7 +22,7 @@ const UserInfoCard = async (props: Props) => {
   let isFollowing = false;
   let isFollowingSent = false;
 
-  const { userId: currentUserId } = auth();
+  const { userId: currentUserId } = await auth();
 
   if (currentUserId) {
     const blockRes = await prisma.block.findFirst({
@@ -54,9 +55,13 @@ const UserInfoCard = async (props: Props) => {
       {/* TOP  */}
       <div className=" flex justify-between items-center font-medium">
         <span className="text-gray-500">User Information</span>
-        <Link className="text-blue-500 text-xs" href={"/"}>
-          See all
-        </Link>
+        {currentUserId === props.user.id ? (
+          <UpdateUser />
+        ) : (
+          <Link className="text-blue-500 text-xs" href={"/"}>
+            See all
+          </Link>
+        )}
       </div>
       {/* BOTTOM  */}
       <div className="flex flex-col gap-4 text-gray-500">
@@ -106,13 +111,14 @@ const UserInfoCard = async (props: Props) => {
           <span className="text-xs">Joined {formatedDate}</span>
         </div>
 
-        <UserInfoCardInteraction
-          userId={props.user.id}
-          currentUserId={currentUserId}
-          isUserBlocked={isUserBlocked}
-          isFollowing={isFollowing}
-          isFollowingSent={isFollowingSent}
-        />
+        {currentUserId && currentUserId !== props.user.id && (
+          <UserInfoCardInteraction
+            userId={props.user.id}
+            isUserBlocked={isUserBlocked}
+            isFollowing={isFollowing}
+            isFollowingSent={isFollowingSent}
+          />
+        )}
       </div>
     </div>
   );
